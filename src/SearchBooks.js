@@ -6,6 +6,14 @@ import ListBooks from './ListBooks';
 import './App.css'
 
 class SearchBooks extends Component {
+  constructor(props) {
+    super(props);
+    // Create a simple key-value pair object from id and shelf of myBooks
+    this.myBooks = {};
+    this.props.books.forEach(book => {
+      this.myBooks[book.id] = book.shelf;
+    });
+  }
 
   state = {
     query: '',
@@ -26,6 +34,14 @@ class SearchBooks extends Component {
           if (results.error) {
             this.setState({ searchResults: [], noResults: true });
           } else {
+            // Update the search result with shelf info based on myBooks
+            results.forEach(r => {
+              if (this.myBooks.hasOwnProperty(r.id)) {
+                r.shelf = this.myBooks[r.id];
+              } else {
+                r.shelf = 'none';
+              }
+            })
             this.setState({ searchResults: results, noResults: false });
           }          
         })
