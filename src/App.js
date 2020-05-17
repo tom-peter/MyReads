@@ -1,27 +1,77 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 
 class BooksApp extends Component {
   state = {
-
+    myBooks: []
+  }
+  
+  // Fetch books from Udacity
+  componentDidMount() {
+    BooksAPI.getAll()
+      .then((myBooks) => {
+        this.setState(() => ({
+          myBooks
+        }))
+      })
+      .then(() => {
+        console.log(this.state.myBooks);
+      })
+      // TODO: error handling?
   }
 
   render() {
+
+    let books = this.state.myBooks;
+    let currentlyReading = books.filter(book => book.shelf === "currentlyReading");
+    let wantToRead = books.filter(book => book.shelf === "wantToRead");
+    let read = books.filter(book => book.shelf === "read");
+
     return (
       <div className="app">
          <div>
             { /* the main screen is the Bookshelf screen */ }
             <Route path='/' exact
-               render={() => (
+              render={() => (
 
-                  <div className="list-books">
+                <div className="list-books">
                   <div className="list-books-title">
                     <h1>MyReads</h1>
                   </div>
                   <div className="list-books-content">
                     <div>
+
+                      <div className="bookshelf">
+                        <h2 className="bookshelf-title">Currently Reading</h2>
+                        <div className="bookshelf-books">
+                          <ListBooks
+                            books={currentlyReading}
+                          />
+                        </div>
+                      </div>
+              
+                      <div className="bookshelf">
+                        <h2 className="bookshelf-title">Want to Read</h2>
+                        <div className="bookshelf-books">
+                          <ListBooks
+                            books={wantToRead}
+                          />
+                        </div>
+                      </div>
+              
+                      <div className="bookshelf">
+                        <h2 className="bookshelf-title">Read</h2>
+                        <div className="bookshelf-books">
+                          <ListBooks
+                            books={read}
+                          />
+                        </div>
+                      </div>
+
+{ /* Old static list */ }
+
                       <div className="bookshelf">
                         <h2 className="bookshelf-title">Currently Reading</h2>
                         <div className="bookshelf-books">
@@ -216,6 +266,42 @@ class BooksApp extends Component {
             />        
          </div>
 
+      </div>
+    )
+  }
+}
+
+class ListBooks extends Component {
+ 
+  render() {
+    const books = this.props.books;
+
+    return (
+      <div>
+        <ol className="books-grid">
+
+          {books.map((book) => (
+            <li key={book.id}>
+              <div className="book">
+                <div className="book-top">
+                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                  <div className="book-shelf-changer">
+                    <select>
+                      <option value="move" disabled>Move to...</option>
+                      <option value="currentlyReading">Currently Reading</option>
+                      <option value="wantToRead">Want to Read</option>
+                      <option value="read">Read</option>
+                      <option value="none">None</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="book-title">{ book.title }</div>
+                <div className="book-authors">{ book.authors }</div>
+              </div>
+            </li>
+          ))}
+
+        </ol>
       </div>
     )
   }
