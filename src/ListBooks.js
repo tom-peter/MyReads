@@ -7,7 +7,6 @@ class ListBooks extends Component {
     const books = this.props.books;
 
     return (
-      <div>
         <ol className="books-grid">
 
           {books.map((book) => (
@@ -32,7 +31,6 @@ class ListBooks extends Component {
           ))}
 
         </ol>
-      </div>
     )
   }
 }
