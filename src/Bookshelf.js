@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks';
 import './App.css'
 
@@ -12,10 +13,19 @@ class Bookshelf extends Component {
         <div className="bookshelf-books">
           <ListBooks
             books={booksOnShelf}
+            getBooks={this.props.getBooks}
+            updateBook={this.updateBookAndMyBooks}
           />
         </div>
       </div>
     )
+  }
+
+  updateBookAndMyBooks(book, shelf) {
+    BooksAPI.update(book, shelf)
+    .then(() => {
+      this.getBooks();
+    });
   }
 
   render() {

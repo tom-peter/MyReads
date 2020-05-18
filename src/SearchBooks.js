@@ -9,15 +9,17 @@ class SearchBooks extends Component {
   constructor(props) {
     super(props);
     // Create a simple key-value pair object from id and shelf of myBooks
-    this.myBooks = {};
+    this.myBooksOnShelf = {};
     this.props.books.forEach(book => {
-      this.myBooks[book.id] = book.shelf;
+      this.myBooksOnShelf[book.id] = book.shelf;
     });
+
+    this.updateBookAndSearch = this.updateBookAndSearch.bind(this);
   }
 
   state = {
     query: '',
-    searchResults: [],
+    books: [],
     noResults: false
   }
 
@@ -32,27 +34,43 @@ class SearchBooks extends Component {
       BooksAPI.search(q)
         .then((results) => {
           if (results.error) {
-            this.setState({ searchResults: [], noResults: true });
+            this.setState({ books: [], noResults: true });
           } else {
             // Update the search result with shelf info based on myBooks
             results.forEach(r => {
-              if (this.myBooks.hasOwnProperty(r.id)) {
-                r.shelf = this.myBooks[r.id];
+              if (this.myBooksOnShelf.hasOwnProperty(r.id)) {
+                r.shelf = this.myBooksOnShelf[r.id];
               } else {
                 r.shelf = 'none';
               }
             })
-            this.setState({ searchResults: results, noResults: false });
+            this.setState({ books: results, noResults: false });
           }          
         })
     } else {
-      this.setState({ searchResults: [], noResults: false });
+      this.setState({ books: [], noResults: false });
     }
   });
 
+  updateBookAndSearch(book, shelf, books) {
+    BooksAPI.update(book, shelf)
+    .then(() => {
+      this.props.getBooks();
+      book.shelf = shelf;
+      let updatedSearchResults = books;
+      updatedSearchResults.forEach((b) => {
+        (b.id === book.id) && (b.shelf = book.shelf);
+      })
+      this.setState({
+        books: updatedSearchResults
+      });
+      this.myBooksOnShelf[book.id] = book.shelf;      
+    });
+  }
+
   render() {
 
-    const { query, searchResults, noResults } = this.state;
+    const { query, books, noResults } = this.state;
 
     return (
       <div className="search-books">
@@ -78,10 +96,12 @@ class SearchBooks extends Component {
         </div>
 
         <div className="search-books-results">
-          { query && searchResults.length > 0 && (
+          { query && books.length > 0 && (
             <ListBooks
-              books={searchResults}
-            />          
+              books={books}
+              getBooks={this.props.getBooks}
+              updateBook={this.updateBookAndSearch}
+            />
             )
           }
           { noResults && ( <h2>No results.</h2> ) }
