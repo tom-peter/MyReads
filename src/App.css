@@ -10,6 +10,11 @@ body, .app {
   background: white;
 }
 
+h3 {
+  text-align: center;
+  color: red;
+}
+
 /* main page */
 
 .list-books-title {
@@ -31,6 +36,7 @@ body, .app {
 
 .bookshelf {
   padding: 0 10px 20px;
+  color: black;
 }
 
 @media (min-width: 600px) {

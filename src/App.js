@@ -12,7 +12,8 @@ class BooksApp extends Component {
   }
 
   state = {
-    myBooks: []
+    myBooks: [],
+    error: false
   }
   
   // Fetch books from Udacity
@@ -24,13 +25,15 @@ class BooksApp extends Component {
     BooksAPI.getAll()
     .then((myBooks) => {
       this.setState(() => ({
-        myBooks
+        myBooks: myBooks,
+        error: false
       }))
     })
-    .then(() => {
-      console.log('getBooks: ', this.state.myBooks);
+    .catch((error) => {
+      this.setState(() => ({
+        error: true
+      }))
     })
-    // TODO: error handling?
   }
 
     render() {
@@ -43,6 +46,7 @@ class BooksApp extends Component {
                 <Bookshelf
                   books={this.state.myBooks}
                   getBooks={this.getBooks}
+                  error={this.state.error}
 					      />                
               )}
             />

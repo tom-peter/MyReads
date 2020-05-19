@@ -20,7 +20,8 @@ class SearchBooks extends Component {
   state = {
     query: '',
     books: [],
-    noResults: false
+    noResults: false,
+    error: false
   }
 
   updateQuery = (q) => {    
@@ -34,7 +35,7 @@ class SearchBooks extends Component {
       BooksAPI.search(q)
         .then((results) => {
           if (results.error) {
-            this.setState({ books: [], noResults: true });
+            this.setState({ books: [], noResults: true, error: false });
           } else {
             // Update the search result with shelf info based on myBooks
             results.forEach(r => {
@@ -44,9 +45,13 @@ class SearchBooks extends Component {
                 r.shelf = 'none';
               }
             })
-            this.setState({ books: results, noResults: false });
+            this.setState({ books: results, noResults: false, error: false });
           }          
         })
+        .catch((error) => {
+          this.setState({ error: true });
+        })
+
     } else {
       this.setState({ books: [], noResults: false });
     }
@@ -104,7 +109,8 @@ class SearchBooks extends Component {
             />
             )
           }
-          { noResults && ( <h2>No results.</h2> ) }
+          { noResults && ( <h3>No results.</h3> ) }
+          { this.state.error && ( <h3>Network error...</h3> ) } 
         </div>
       </div>   
     )}  

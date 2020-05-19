@@ -41,6 +41,10 @@ class Bookshelf extends Component {
           <h1>MyReads</h1>
         </div>
 
+        <div>
+          {this.props.error && ( <h3>Network error...</h3> ) }
+        </div>
+
         <div className="list-books-content">
           <div>
             {this.renderBookShelf(currentlyReading, 'Currently Reading')}
