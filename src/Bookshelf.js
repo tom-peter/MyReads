@@ -6,6 +6,7 @@ import './App.css'
 
 class Bookshelf extends Component {
 
+  // Create one bookshelf
   renderBookShelf(booksOnShelf, shelfTitle) {    
     return (
       <div className="bookshelf">
@@ -21,6 +22,7 @@ class Bookshelf extends Component {
     )
   }
 
+  // Update the books on server and fetch the new data
   updateBookAndMyBooks(book, shelf) {
     BooksAPI.update(book, shelf)
     .then(() => {

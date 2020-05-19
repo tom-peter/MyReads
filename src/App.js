@@ -16,7 +16,7 @@ class BooksApp extends Component {
     error: false
   }
   
-  // Fetch books from Udacity
+  // Fetch books from Udacity server
   componentDidMount() {
     this.getBooks();
   }
@@ -62,7 +62,6 @@ class BooksApp extends Component {
             />        
 
          </div>
-
       </div>
     )
   }

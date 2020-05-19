@@ -29,9 +29,10 @@ class SearchBooks extends Component {
     this.searchForBooks();
   };  
 
+  // Search books on server and set the state according to the results
   searchForBooks = debounce(300, false, () => {
     let q = this.state.query.trim();
-    if (q) {
+    if (q) {    // If query has content
       BooksAPI.search(q)
         .then((results) => {
           if (results.error) {
@@ -52,11 +53,12 @@ class SearchBooks extends Component {
           this.setState({ error: true });
         })
 
-    } else {
+    } else {    // If query has NO content
       this.setState({ books: [], noResults: false });
     }
   });
 
+  // Update books on server and in state with shelf info
   updateBookAndSearch(book, shelf, books) {
     BooksAPI.update(book, shelf)
     .then(() => {
@@ -100,6 +102,7 @@ class SearchBooks extends Component {
           </div>
         </div>
 
+        { /* Search results */ }
         <div className="search-books-results">
           { query && books.length > 0 && (
             <ListBooks
