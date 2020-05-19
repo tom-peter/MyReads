@@ -24,12 +24,12 @@ class SearchBooks extends Component {
   }
 
   updateQuery = (q) => {    
-    this.setState({ query: q.trim() });
+    this.setState({ query: q });
     this.searchForBooks();
   };  
 
   searchForBooks = debounce(300, false, () => {
-    let q = this.state.query;
+    let q = this.state.query.trim();
     if (q) {
       BooksAPI.search(q)
         .then((results) => {
